@@ -12,6 +12,9 @@ public class CardHandBuilder {
   private CardType cardTypeJoker;
   private CardType cardType;
 
+  private CardHandBuilder() {
+  }
+
   public static CardHandBuilder builder() {
     return new CardHandBuilder();
   }

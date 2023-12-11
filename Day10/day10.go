@@ -56,12 +56,12 @@ func countEnclosedTilesInPipe(pipes []string) int {
 	for i := 1; i < len(pipes)-1; i++ {
 		for j := 1; j < len(pipes[i])-1; j++ {
 
-			if pipes[i][j] != '*' {
-				for isEnclosed(i, j, pipes) {
-
-				}
-				enclosedCount++
-			}
+			//if pipes[i][j] != '*' {
+			//	for isEnclosed(i, j, pipes) {
+			//
+			//	}
+			//	enclosedCount++
+			//}
 		}
 	}
 	return enclosedCount

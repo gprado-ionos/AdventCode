@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,11 +23,52 @@ public class Day8 {
     String commands = day8.getCommands(allLines);
     List<NavigationEntry> navigationEntries = day8.parseMap(allLines);
     //Integer steps = day8.countSteps(commands, navigationEntries);
-    Integer stepsPart2 = day8.countStepsFromMultipleCoordinates(commands, navigationEntries);
+
+    day8.testIt(commands, navigationEntries);
+
+    //Integer stepsPart2 = day8.countStepsFromMultipleCoordinates(commands, navigationEntries);
 
     //System.out.println(steps);
-    System.out.println(stepsPart2);
+    //System.out.println(stepsPart2);
 
+  }
+
+  private void testIt(String commands, List<NavigationEntry> navigationEntries) {
+
+    Integer steps = 1;
+    List<String> destinations = navigationEntries.stream()
+        .filter(n -> n.destination().charAt(2) == startPart2)
+        .map(n -> {
+          if (commands.charAt(0) == 'R') {
+            return n.coordinate().right();
+          } else {
+            return n.coordinate().left();
+          }
+        }).collect(Collectors.toList());
+    System.out.println("Comecando com .... " + Arrays.toString(destinations.toArray()));
+    for (String destination : destinations) {
+      String dest = destination;
+      steps = 1;
+      boolean arrived = false;
+      while (!arrived) {
+        for (int i = steps == 1 ? 1 : 0; i < commands.length(); i++) {
+          List<String> destinationsAux = new ArrayList<>();
+          String filterDest = "";
+
+          dest = navigate(commands.charAt(i), navigationEntries, dest);
+          filterDest += dest.charAt(2);
+          destinationsAux.add(dest);
+
+          destinations = destinationsAux;
+          steps++;
+          if (filterDest.equalsIgnoreCase("Z")) {
+            System.out.println(
+                "Destination " + destination + " Passos...  " + steps);
+            arrived = true;
+          }
+        }
+      }
+    }
   }
 
   public String[] parseMapEntry(String mapEntry) {
@@ -99,16 +141,21 @@ public class Day8 {
             return n.coordinate().left();
           }
         }).collect(Collectors.toList());
+    System.out.println("Comecando com .... " + Arrays.toString(destinations.toArray()));
     while (!arrived) {
       for (int i = steps == 1 ? 1 : 0; i < commands.length(); i++) {
         List<String> destinationsAux = new ArrayList<>();
+        String filterDest = "";
         for (String destination : destinations) {
-          destinationsAux.add(navigate(commands.charAt(i), navigationEntries, destination));
+          String dest = navigate(commands.charAt(i), navigationEntries, destination);
+          filterDest += dest.charAt(2);
+          destinationsAux.add(dest);
         }
         destinations = destinationsAux;
+        System.out.println(
+            "Passo " + steps + " Chegou em...  " + Arrays.toString(destinations.toArray()));
         steps++;
-        if (!destinations.stream().filter(dest -> dest.charAt(2) != destinationPart2).findFirst()
-            .isPresent()) {
+        if (filterDest.equalsIgnoreCase("Z".repeat(destinations.size()))) {
           arrived = true;
           break;
         }
